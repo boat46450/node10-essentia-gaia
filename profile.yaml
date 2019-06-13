@@ -1,0 +1,29 @@
+outputFormat: json
+outputFrames: 1
+startTime: 30
+endTime: 60
+analysisSampleRate: 44100.0
+
+highlevel:
+    compute: 1
+    svm_models: [
+        '/scripts/svm_models/mood_relaxed.history',
+        '/scripts/svm_models/voice_instrumental.history',
+        '/scripts/svm_models/mood_happy.history',
+        '/scripts/svm_models/genre_tzanetakis.history',
+        '/scripts/svm_models/danceability.history',
+        '/scripts/svm_models/tonal_atonal.history',
+        '/scripts/svm_models/mood_party.history',
+        '/scripts/svm_models/ismir04_rhythm.history',
+        '/scripts/svm_models/mood_acoustic.history',
+        '/scripts/svm_models/gender.history',
+        '/scripts/svm_models/mood_electronic.history',
+        '/scripts/svm_models/mood_sad.history',
+        '/scripts/svm_models/moods_mirex.history',
+        '/scripts/svm_models/genre_rosamerica.history',
+        '/scripts/svm_models/mood_aggressive.history',
+        '/scripts/svm_models/genre_dortmund.history',
+        '/scripts/svm_models/genre_electronic.history',
+        '/scripts/svm_models/timbre.history',
+    ]
+
