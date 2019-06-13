@@ -1,0 +1,42 @@
+FROM node:10
+
+RUN apt update
+RUN apt install -y libyaml-0-2 libfftw3-3 libtag1v5 \
+    libavcodec57 libavformat57 libavutil55 libavresample3 \
+    libsamplerate0 libpython2.7 libqtcore4 \
+    python python-numpy python-yaml python-six
+RUN rm -rf /var/lib/apt/lists/*
+
+RUN apt update
+RUN apt install -y build-essential libyaml-dev libfftw3-dev \
+    libavcodec-dev libavformat-dev libavutil-dev libavresample-dev \
+    libsamplerate0-dev libtag1-dev libqt4-dev \
+    python-dev python-numpy-dev git swig pkg-config
+
+RUN mkdir essentia-with-gaia
+RUN cd essentia-with-gaia && \
+    git clone https://github.com/MTG/essentia.git && \
+    git clone https://github.com/MTG/gaia.git
+RUN cd essentia-with-gaia && \
+    cd gaia && ./waf configure && ./waf && ./waf install && \
+    cd ../essentia/ && git checkout v2.1_beta3 && \
+    ./waf configure --mode=release --ignore-algos=Spline,CubicSpline,Chromaprinter,LogSpectrum,NNLSChroma --with-vamp --with-examples --with-gaia && \
+    ./waf && ./waf install && ldconfig
+
+RUN rm -rf essentia-with-gaia/
+RUN apt remove -y build-essential libyaml-dev libfftw3-dev \
+    libavcodec-dev libavformat-dev libavutil-dev libavresample-dev \
+    libsamplerate0-dev libtag1-dev libqt4-dev \
+    python-dev python-numpy-dev swig pkg-config
+RUN apt autoremove -y
+RUN apt clean -y
+RUN rm -rf /var/lib/apt/lists/*
+
+RUN mkdir scripts
+COPY ./svm_models/ /scripts/svm_models/
+COPY ./profile.yaml /scripts/profile.yaml
+COPY ./extract.sh /scripts/extract.sh
+RUN cd scripts && chmod +x extract.sh
+ENV PATH "/scripts:$PATH"
+
+CMD [ "node" ]
